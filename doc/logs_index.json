@@ -1,0 +1,42 @@
+{
+  "settings": {
+    "index": {
+
+      "number_of_shards": "2",
+      "number_of_replicas": "1"
+
+
+    }
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "long"
+      },
+      "clientip": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "request": {
+        "type": "text",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "size": {
+        "type": "long"
+      },
+      "status": {
+        "type": "long"
+      }
+    }
+  }
+}
