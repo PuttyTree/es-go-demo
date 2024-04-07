@@ -1,0 +1,46 @@
+/target/
+!.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.settings/
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+.idea/
+*.iws
+*.iml
+*.ipr
+.mvn
+.mvnw.cmd
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### common ###
+*.class
+*.iml
+.DS_Store
+.apt_generated
+.factorypath
+# Package Files #
+
+*.war
+*.ear
+*.log
+user1.home_IS_UNDEFINED/
+
+bin/
+target/
+transaction-logs/
