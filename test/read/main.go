@@ -18,6 +18,7 @@ var typ = "_doc"
 var numberRoutines = 1
 var batchCount = 10000
 
+//read from es, then write to json file
 func main() {
   var path = "d://1.json"
   client := util.GetFastHttpClient()

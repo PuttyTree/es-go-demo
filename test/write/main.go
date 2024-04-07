@@ -19,7 +19,7 @@ var typ = "_doc"
 var batchCount = 10000
 var numberRoutines = 16
 
-//read es, then write to json file
+//read from json file, then write to ES
 func main() {
   var path = "d://sample_data.json"
 
