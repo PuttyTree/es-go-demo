@@ -1,6 +1,6 @@
 package entity
 
-// 本行卡
+
 type SzjyLstDtlBat struct {
 	Index       string  `json:"-"`
 	BalAmt      float32 `json:"bal_amt"`
@@ -42,7 +42,6 @@ type SzjyLstDtlBat struct {
 	TrxTim      string  `json:"trx_tim"`
 }
 
-// 数字钱包
 type SzjyWcrdBat struct {
 	BalAmt      float32 `json:"bal_amt"`
 	CcyCod      string  `json:"ccy_cod"`
