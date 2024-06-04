@@ -1,0 +1,24 @@
+{
+  "env": "st",
+  "disk": "D:",
+  "parentDir": "xxx",
+  "year": 2018,
+  "batchSize": 1000,
+  "threadNum": 1,
+  "oneFileThreadNum": 1,
+  "localIp": "",
+  "esrpHost": "",
+  "zhaohuUsers": "80318002",
+  "reader": {
+    "cluster": "cluster1",
+    "endpoint": "localhost:9200",
+    "accessId": "",
+    "accessKey": ""
+  },
+  "writer": {
+    "cluster": "cluster2",
+    "endpoint": "localhost:9200",
+    "accessId": "elastic",
+    "accessKey": "wL9Ood2@"
+  }
+}

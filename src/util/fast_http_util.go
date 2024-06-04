@@ -13,8 +13,8 @@ func GetFastHttpClient() *fasthttp.Client {
 		ReadTimeout: time.Second * 90,
 		// 写超时时间
 		WriteTimeout: time.Second * 90,
-		// 5秒后，关闭空闲的活动连接
-		MaxIdleConnDuration: time.Second * 5,
+		// 60秒后，关闭空闲的活动连接
+		MaxIdleConnDuration: time.Second * 60,
 		// 当true时,从请求中去掉User-Agent标头
 		NoDefaultUserAgentHeader: true,
 		// 当true时，header中的key按照原样传输，默认会根据标准化转化
@@ -79,11 +79,11 @@ func Post() string {
 	// 获取客户端
 	client := GetFastHttpClient()
 	// 从请求池中分别获取一个request、response实例
-	req, resp := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
+	req, res := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
 	// 回收到请求池
 	defer func() {
 		fasthttp.ReleaseRequest(req)
-		fasthttp.ReleaseResponse(resp)
+		fasthttp.ReleaseResponse(res)
 	}()
 	// 设置请求方式
 	req.Header.SetMethod(fasthttp.MethodPost)
@@ -99,10 +99,10 @@ func Post() string {
 	marshal, _ := json.Marshal(param)
 	req.SetBodyRaw(marshal)
 	// 发起请求
-	if err := client.Do(req, resp); err != nil {
+	if err := client.Do(req, res); err != nil {
 		fmt.Println("req err ", err)
 		return err.Error()
 	}
 	// 读取结果
-	return string(resp.Body())
+	return string(res.Body())
 }

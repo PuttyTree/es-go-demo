@@ -1,0 +1,116 @@
+{
+  "dynamic": "strict",
+  "properties": {
+    "bal_amt": {
+      "type": "double"
+    },
+    "ccy_cod": {
+      "type": "keyword"
+    },
+    "chn_cod": {
+      "type": "keyword"
+    },
+    "chn_nam": {
+      "type": "keyword"
+    },
+    "dat_dte": {
+      "type": "keyword"
+    },
+    "dat_flg1": {
+      "type": "keyword"
+    },
+    "dat_flg2": {
+      "type": "keyword"
+    },
+    "dat_flg3": {
+      "type": "keyword"
+    },
+    "dat_mon": {
+      "type": "keyword"
+    },
+    "db1_cod": {
+      "type": "keyword"
+    },
+    "dt1_typ": {
+      "type": "keyword"
+    },
+    "eac_id": {
+      "type": "keyword"
+    },
+    "f1": {
+      "type": "keyword"
+    },
+    "f10": {
+      "type": "text"
+    },
+    "f2": {
+      "type": "keyword"
+    },
+    "f3": {
+      "type": "keyword"
+    },
+    "f4": {
+      "type": "keyword"
+    },
+    "f5": {
+      "type": "keyword"
+    },
+    "f6": {
+      "type": "keyword"
+    },
+    "f7": {
+      "type": "text"
+    },
+    "f8": {
+      "type": "text"
+    },
+    "f9": {
+      "type": "text"
+    },
+    "file_flag": {
+      "type": "keyword"
+    },
+    "fuzzy_search": {
+      "type": "text"
+    },
+    "mch2_cod": {
+      "type": "keyword"
+    },
+    "mch_cod": {
+      "type": "keyword"
+    },
+    "pay_eac": {
+      "type": "keyword"
+    },
+    "picture": {
+      "type": "keyword"
+    },
+    "rcv_eac": {
+      "type": "keyword"
+    },
+    "rmb_amt": {
+      "type": "double"
+    },
+    "trx_amt": {
+      "type": "double"
+    },
+    "trx_cod1": {
+      "type": "keyword"
+    },
+    "trx_cod2": {
+      "type": "keyword"
+    },
+    "trx_cod3": {
+      "type": "keyword"
+    },
+    "trx_crd_nbr": {
+      "type": "keyword"
+    },
+    "trx_dte": {
+      "type": "keyword"
+    },
+    "trx_tim": {
+      "type": "keyword"
+    }
+  }
+}

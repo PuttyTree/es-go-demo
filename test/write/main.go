@@ -8,28 +8,29 @@ import (
   "github.com/valyala/fasthttp"
   "io"
   "os"
+  "strings"
   "sync"
   "time"
 )
 
 var host = "http://localhost:9200"
-var index = "logs_index"
-var typ = "_doc"
+var index = "test"
+var mappingType = "_doc"
 
-var batchCount = 10000
-var numberRoutines = 16
+var batchCount = 100
+var numberRoutines = 8
 
-//read from json file, then write to ES
 func main() {
-  var path = "d://sample_data.json"
-
+  var path = "d://documents-241998.json"
+  path = os.Args[1]
+  //var path = "d://2.txt"
   inChan := make(chan string, 12000)
   exit := make(chan bool, 1)
   counterChan := make(chan int, 20)
   client := util.GetFastHttpClient()
   start := time.Now()
-  go readTwo(path, inChan)
-  go writeTwo(inChan, exit, client, counterChan)
+  go readFile(path, inChan)
+  go writeEs(inChan, exit, client, counterChan)
   count(counterChan, 0)
   for {
     _, ok := <-exit
@@ -55,7 +56,7 @@ func count(counterChan chan int, counter int) {
   }
 }
 
-func readTwo(path string, inChan chan string) {
+func readFile(path string, inChan chan string) {
   file, err := os.Open(path)
   if err != nil {
     fmt.Println("open file error:", err)
@@ -65,21 +66,23 @@ func readTwo(path string, inChan chan string) {
   reader := bufio.NewReaderSize(file, 4096*8)
   for {
     line, _, err := reader.ReadLine()
-    if len(line) < 1 || err == io.EOF {
+    if err == io.EOF {
       break
     }
+    if len(line) < 1 {
+      continue
+    }
     inChan <- string(line)
-
   }
   close(inChan)
 }
 
-func writeTwo(inChan chan string, exit chan bool, client *fasthttp.Client, counterChan chan int) {
+func writeEs(inChan chan string, exit chan bool, client *fasthttp.Client, counterChan chan int) {
   var wg sync.WaitGroup
 
   wg.Add(numberRoutines)
   for i := 0; i < numberRoutines; i++ {
-    go writeES(inChan, &wg, client, counterChan)
+    go doWriteES(inChan, &wg, client, counterChan)
   }
   wg.Wait()
   close(counterChan)
@@ -87,13 +90,13 @@ func writeTwo(inChan chan string, exit chan bool, client *fasthttp.Client, count
   close(exit)
 }
 
-func writeES(inChan chan string, wg *sync.WaitGroup, client *fasthttp.Client, counterChan chan int) {
+func doWriteES(inChan chan string, wg *sync.WaitGroup, client *fasthttp.Client, counterChan chan int) {
   var lines = make([]string, 0, batchCount)
   for {
     line, ok := <-inChan
     if !ok {
       if len(lines) > 0 {
-        write(lines, client)
+        writeNew(lines, client)
         counterChan <- len(lines)
         lines = make([]string, 0, batchCount)
       }
@@ -102,7 +105,7 @@ func writeES(inChan chan string, wg *sync.WaitGroup, client *fasthttp.Client, co
     }
     lines = append(lines, line)
     if len(lines) == cap(lines) {
-      write(lines, client)
+      writeNew(lines, client)
       counterChan <- len(lines)
       lines = make([]string, 0, batchCount)
     }
@@ -145,6 +148,40 @@ func readOne(path string) {
   }
 }
 
+func writeNew(lines []string, client *fasthttp.Client) {
+  if len(lines) < 1 {
+    return
+  }
+  req, res := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
+  req.Header.SetMethod(fasthttp.MethodPost)
+  req.Header.SetContentType("application/json")
+  var uri = host + "/_bulk"
+  var s1, s2 string
+  var buf bytes.Buffer
+  for _, line := range lines {
+    pair := strings.Split(line, "|||")
+    if len(pair) != 2 {
+      continue
+    }
+    if strings.Contains(pair[0], "_index") {
+      s1 = pair[0]
+      s2 = pair[1]
+    } else {
+      s1 = pair[1]
+      s2 = pair[0]
+    }
+    buf.WriteString(s1 + "\n")
+    buf.WriteString(s2 + "\n")
+
+  }
+  req.SetRequestURI(uri)
+  req.SetBody(buf.Bytes())
+  if err := client.Do(req, res); err != nil {
+    fmt.Println("req error ", err)
+    return
+  }
+
+}
 func write(lines []string, client *fasthttp.Client) {
   if len(lines) < 1 {
     return

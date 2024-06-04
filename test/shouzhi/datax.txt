@@ -1,0 +1,4 @@
+host=http://localhost:8080
+targetInstance=es1
+targetId=3413
+auth=Bearer 

@@ -1,0 +1,20 @@
+{
+  "batchSize": 1000,
+  "threadNum": 8,
+  "reader": {
+    "cluster": "cluster1",
+    "endpoint": "localhost:9200",
+    "accessId": "4440",
+    "accessKey": "zPW53ZiJlaOQ2W2",
+    "index": "index1",
+    "type": "_doc"
+  },
+  "writer": {
+    "cluster": "cluster2",
+    "endpoint": "localhost:8200",
+    "accessId": "4440",
+    "accessKey": "zPW53ZiJlaOQ2W2",
+    "index": "index2",
+    "type": "_doc"
+  }
+}

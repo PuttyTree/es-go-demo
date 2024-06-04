@@ -1,0 +1,11 @@
+    "cluster": "es-test1-vop003",
+    "endpoint": "55.13.64.91:9200,55.13.63.92:9200",
+    "accessId": "",
+    "accessKey": ""
+
+
+
+        "cluster": "es-test1-vop002",
+        "endpoint": "55.13.63.95:9200,55.13.64.95:9200",
+        "accessId": "elastic",
+        "accessKey": "wL9Ood2@"

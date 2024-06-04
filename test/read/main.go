@@ -18,7 +18,6 @@ var typ = "_doc"
 var numberRoutines = 1
 var batchCount = 10000
 
-//read from es, then write to json file
 func main() {
   var path = "d://1.json"
   client := util.GetFastHttpClient()
@@ -60,7 +59,8 @@ func doReading(client *fasthttp.Client, hits chan []model.Hit, counterChan chan 
   req.Header.SetContentType("application/json")
   var uri = host + "/" + index + "/" + typ + "/_search?scroll=1m"
   req.SetRequestURI(uri)
-  var body map[string]any
+
+  var body map[string]interface{}
   if numberRoutines <= 1 {
     body = map[string]interface{}{
       "size": batchCount,
@@ -117,7 +117,6 @@ func doReading(client *fasthttp.Client, hits chan []model.Hit, counterChan chan 
 
 func clearScroll(client *fasthttp.Client, scrollId string) {
   req, res := fasthttp.AcquireRequest(), fasthttp.AcquireResponse()
-  req.Header.SetMethod(fasthttp.MethodPost)
   req.Header.SetMethod(fasthttp.MethodDelete)
   uri := host + "/_search/scroll"
   req.SetRequestURI(uri)
@@ -133,10 +132,10 @@ func startWrite(path string, hits chan []model.Hit, exit chan bool, counterChan 
   var file *os.File
   _, err := os.Stat(path)
   /*if os.IsNotExist(err) {
-     file, _ = os.Create(path)
-    } else {
-     file, _ = os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
-   }*/
+  		file, _ = os.Create(path)
+  	} else {
+  		file, _ = os.OpenFile(path, os.O_APPEND|os.O_WRONLY, 0600)
+  }*/
   if err == nil {
     os.Remove(path)
   }
@@ -150,6 +149,8 @@ func startWrite(path string, hits chan []model.Hit, exit chan bool, counterChan 
     if !ok {
       if len(docs) > 0 {
         for _, doc := range docs {
+          meta := fmt.Sprintf(`{ "index" : { "_id":"%s" } }%s`, doc.Id, "\n")
+          writer.WriteString(meta)
           bytes, _ := json.Marshal(doc.Source)
           writer.WriteString(string(bytes) + "\n")
           writer.Flush()
@@ -158,6 +159,8 @@ func startWrite(path string, hits chan []model.Hit, exit chan bool, counterChan 
       break
     }
     for _, doc := range docs {
+      meta := fmt.Sprintf(`{ "index" : { "_id":"%s" } }%s`, doc.Id, "\n")
+      writer.WriteString(meta)
       bytes, _ := json.Marshal(doc.Source)
       writer.WriteString(string(bytes) + "\n")
       index++
